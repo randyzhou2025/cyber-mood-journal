@@ -45,8 +45,10 @@ const demoData: MoodEntry[] = [
     images: []
   }
 ];
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
+if (!process.env.NEXT_PUBLIC_API_BASE) {
+  throw new Error('NEXT_PUBLIC_API_BASE is not defined');
+}
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const buildImageUrl = (url: string) =>
   url.startsWith('http') ? url : `${API_BASE}${url}`;
 const formatLocation = (loc?: string) => {

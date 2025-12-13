@@ -3,6 +3,10 @@ FROM node:18-bullseye-slim AS builder
 
 WORKDIR /app
 
+# 👇 接收 CloudBase 注入的 build arg
+ARG NEXT_PUBLIC_API_BASE
+ENV NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
+
 # 复制依赖文件
 COPY package.json package-lock.json ./
 

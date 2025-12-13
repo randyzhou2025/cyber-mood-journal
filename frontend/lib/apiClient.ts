@@ -1,24 +1,10 @@
 import { getApiBase } from './apiBase';
 
-let cachedBase: string | null = null;
-
-function getBaseOnce(): string {
-  if (!cachedBase) {
-    cachedBase = getApiBase();
+export async function apiFetch(path: string, options?: RequestInit) {
+  const base = getApiBase();
+  if (!base) {
+    throw new Error('API base not ready');
   }
-  return cachedBase;
-}
 
-export async function apiFetch(
-  path: string,
-  options?: RequestInit
-) {
-  const base = getBaseOnce();
-
-  return fetch(`${base}${path}`, {
-    ...options,
-    headers: {
-      ...(options?.headers || {}),
-    },
-  });
+  return fetch(`${base}${path}`, options);
 }

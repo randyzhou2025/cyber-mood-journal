@@ -1,12 +1,31 @@
-export function getApiBase(): string {
-  const base = process.env.NEXT_PUBLIC_API_BASE;
+let cached: string | null = null;
 
-  if (!base) {
-    throw new Error(
-      'NEXT_PUBLIC_API_BASE is missing at runtime. ' +
-      'Check CloudBase environment variables.'
-    );
+export function getApiBase(): string {
+  if (cached) return cached;
+
+  // SSR / build 阶段兜底（防止 next build 崩）
+  if (typeof window === 'undefined') {
+    return '';
   }
 
-  return base;
+  const { hostname } = window.location;
+
+  // ===== 本地开发 =====
+  if (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1'
+  ) {
+    cached = 'http://localhost:3001';
+    return cached;
+  }
+
+  // ===== CloudBase 线上 =====
+  if (hostname.endsWith('.run.tcloudbase.com')) {
+    cached = 'https://cyber-backend-187701-4-1307478258.sh.run.tcloudbase.com';
+    return cached;
+  }
+
+  // ===== 兜底（防止未知环境）=====
+  console.error('Unknown host:', hostname);
+  return '';
 }

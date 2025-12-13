@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DiaryEntry {
+  id         String   @id @default(uuid())
+  title      String
+  content    String
+  location   String?
+  tags       String[]
+  images     String[]
+  happenedAt DateTime?
+  createdAt  DateTime @default(now())
+}

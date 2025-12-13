@@ -1,0 +1,42 @@
+{
+  "name": "cyber-mood-journal-mini",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Taro React 小程序端 for Cyber Mood Journal",
+  "scripts": {
+    "dev:weapp": "taro build --type weapp --watch",
+    "build:weapp": "taro build --type weapp",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "@tarojs/components": "^3.6.38",
+    "@tarojs/helper": "^3.6.38",
+    "@tarojs/plugin-html": "^3.6.38",
+    "@tarojs/plugin-platform-weapp": "^3.6.38",
+    "@tarojs/react": "^3.6.38",
+    "@tarojs/runtime": "^3.6.38",
+    "@tarojs/taro": "^3.6.38",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "babel-preset-taro": "^3.6.38",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
+    "@tarojs/cli": "^3.6.38",
+    "@tarojs/plugin-framework-react": "^3.6.38",
+    "@tarojs/plugin-platform-h5": "^3.6.38",
+    "@tarojs/webpack5-runner": "^3.6.38",
+    "@typescript-eslint/eslint-plugin": "6.7.4",
+    "@typescript-eslint/parser": "6.7.4",
+    "eslint": "8.53.0",
+    "eslint-config-taro": "4.0.7",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-react": "7.33.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "stylelint": "16.6.1",
+    "stylelint-config-taro-rn": "4.0.7",
+    "stylelint-taro-rn": "4.0.7",
+    "typescript": "5.2.2"
+  }
+}

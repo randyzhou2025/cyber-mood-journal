@@ -1,5 +1,8 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { getApiBase } from '../lib/apiBase';
+import { apiFetch } from '../lib/apiClient';
+
 
 interface MoodEntry {
   id: string;
@@ -45,12 +48,14 @@ const demoData: MoodEntry[] = [
     images: []
   }
 ];
-if (!process.env.NEXT_PUBLIC_API_BASE) {
-  throw new Error('NEXT_PUBLIC_API_BASE is not defined');
-}
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
-const buildImageUrl = (url: string) =>
-  url.startsWith('http') ? url : `${API_BASE}${url}`;
+// if (!process.env.NEXT_PUBLIC_API_BASE) {
+//   throw new Error('NEXT_PUBLIC_API_BASE is not defined');
+// }
+//const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+const buildImageUrl = (url: string) => {
+  if (url.startsWith('http')) return url;
+  return `${getApiBase()}${url}`;
+};
 const formatLocation = (loc?: string) => {
   if (!loc) return '';
   if (loc.startsWith('lat:') || loc.startsWith('纬度')) {
@@ -79,7 +84,7 @@ export default function HomePage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/diary`);
+      const res = await apiFetch(`/diary`);
       if (!res.ok) {
         throw new Error(`请求失败 ${res.status}`);
       }
@@ -125,7 +130,7 @@ export default function HomePage() {
     formData.append('file', file);
     setUploadingFile(true);
     try {
-      const res = await fetch(`${API_BASE}/upload`, {
+      const res = await apiFetch(`/upload`, {
         method: 'POST',
         body: formData
       });
@@ -156,7 +161,7 @@ export default function HomePage() {
         const coord = `lat:${latitude.toFixed(5)}, lng:${longitude.toFixed(5)}`;
         handleFormChange('location', coord);
         try {
-          const res = await fetch(`${API_BASE}/geocode?lat=${latitude}&lng=${longitude}`);
+          const res = await apiFetch(`/geocode?lat=${latitude}&lng=${longitude}`);
           const data = await res.json();
           if (data?.address) {
             handleFormChange('location', data.address);
@@ -194,7 +199,7 @@ export default function HomePage() {
         images: form.images,
         happenedAt: new Date().toISOString()
       };
-      const res = await fetch(`${API_BASE}/diary`, {
+      const res = await apiFetch(`/diary`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

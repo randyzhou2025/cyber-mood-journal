@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: cyber_postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cyber
+
+  migrate:
+    build: ./backend
+    container_name: cyber_migrate
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy"
+    restart: "no"
+    networks:
+      - cyber
+
+  backend:
+    build: ./backend
+    container_name: cyber_backend
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks:
+      - cyber
+
+  frontend:
+    build: ./frontend
+    container_name: cyber_frontend
+    restart: always
+    networks:
+      - cyber
+
+volumes:
+  pgdata:
+
+networks:
+  cyber:
+    driver: bridge

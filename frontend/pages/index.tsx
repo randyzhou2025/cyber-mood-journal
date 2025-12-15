@@ -54,7 +54,7 @@ const demoData: MoodEntry[] = [
 //const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const buildImageUrl = (url: string) => {
   if (url.startsWith('http')) return url;
-  return `${getApiBase()}${url}`;
+  return url;
 };
 const formatLocation = (loc?: string) => {
   if (!loc) return '';

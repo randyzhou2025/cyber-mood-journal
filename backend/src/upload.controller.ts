@@ -47,15 +47,21 @@ export class UploadController {
     return `https://${this.cosBucket}.cos.${this.cosRegion}.myqcloud.com/${filename}`;
   }
 
-  private async uploadToLocal(file: Express.Multer.File): Promise<string> {
-    const uploadDir = join(process.cwd(), 'uploads');
-    if (!existsSync(uploadDir)) {
-      mkdirSync(uploadDir, { recursive: true });
-    }
-    const filename = `${randomUUID()}${extname(file.originalname) || '.bin'}`;
-    writeFileSync(join(uploadDir, filename), file.buffer);
-    return `/uploads/${filename}`;
+private async uploadToLocal(file: Express.Multer.File): Promise<string> {
+  const uploadDir = process.env.UPLOAD_DIR || '/data/uploads';
+  const publicPath = process.env.UPLOAD_PUBLIC_PATH || '/uploads';
+
+  if (!existsSync(uploadDir)) {
+    mkdirSync(uploadDir, { recursive: true });
   }
+
+  const ext = extname(file.originalname);
+  const filename = `${randomUUID()}${ext || '.bin'}`;
+
+  writeFileSync(join(uploadDir, filename), file.buffer);
+
+  return `${publicPath}/${filename}`;
+}
 
   @Post()
   @UseInterceptors(

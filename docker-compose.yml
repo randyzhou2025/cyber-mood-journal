@@ -4,7 +4,7 @@ services:
     container_name: cyber_postgres
     restart: always
     env_file:
-      - .env
+      - ./backend/.env
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -19,7 +19,7 @@ services:
     build: ./backend
     container_name: cyber_migrate
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -33,20 +33,27 @@ services:
     container_name: cyber_backend
     restart: always
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       migrate:
         condition: service_completed_successfully
+    volumes:
+      - ./uploads:/data/uploads
     networks:
       - cyber
+    ports:
+      - "127.0.0.1:3001:3001"
 
   frontend:
     build: ./frontend
     container_name: cyber_frontend
     restart: always
+    env_file:
+      - ./frontend/.env.production
     networks:
       - cyber
-
+    ports:
+      - "127.0.0.1:3000:3000"
 volumes:
   pgdata:
 
